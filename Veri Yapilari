@@ -1,0 +1,93 @@
+//Tek Yonlu Dogrusal Bagli Liste Eleman Ekleme-Listeleme-Siralama
+#include <stdio.h>
+#include <stdlib.h>   //malloc fonksiyonu icin.
+struct node{
+	int data;
+	struct node *next;  //bir sonraki dugumun adresini tutmak icin.
+};
+struct node *head;  //ilk dugumun adresini tutuyor.global tanimladik cunku birkac farkli yerde kullaniyoruz.
+					//bellekten herhangi bir yer ayirma islemi yapmadik, yer ayirmak icin malloc kullanacagiz.
+
+void veriekle()  //parametre vermedik, fonksiyonun icinden veri girisini saglayacagiz.
+{  
+	int veri;
+	printf("Sayi : ");
+	scanf("%d",&veri);  //girilen sayi veri degiskeninde tutuluyor.
+	
+	if(head==NULL)  //eger hic dugum olusmamissa buraya girer ve dugum olustururuz.
+	{
+		head=(struct node *)malloc(sizeof(struct node ));  //olusturdugumuz dugum kadar bellekten alan ayir ve bunun adresini head'e gonder.
+		head->data=veri;  //kullanicidan alinan veri eklenir.
+		head->next=NULL;
+	}
+	else
+	{
+		struct node *temp=head;  //ilk elemani kaybetmememiz icin.
+		struct node *temp2=(struct node *)malloc(sizeof(struct node ));  //temp2 adinda bir dugum olusturduk.
+		temp2->data=veri;
+		temp2->next=NULL;
+		while(temp->next!=NULL)  //tum elemanlarin icini gezmemiz icin.
+			temp=temp->next;
+		temp->next=temp2;			
+	}
+}
+
+void listele() 
+{
+	printf("Listeleniyor\n");
+	struct node *temp=head; //dugumleri gezmek icin yeni bir temp degiskeni olusturduk ve ilk dugumun(head) adresini temp'e atadik.
+	while(temp!=NULL)  //while(temp->next!=NULL) kullansaydik, bu tek elemanli liste icin donguye girmez ve ekrana deger basmazdi.
+	{
+		printf("\n%d",temp->data);
+		temp=temp->next;
+	}
+}
+void sirala() {
+	struct node *temp = head; //ilk elemani kaybetmemek icin.
+	int degis,sayac=0;
+	while(temp->next!=NULL) //tempte tutulan bir sonraki dugumun adresi NULL'dan farkli oldugu sürece dongu devam eder.
+	{ 
+		if(temp->data < temp->next->data) {   //temp degiskeni yardimiyla siralama islemi yapiliyor.
+			degis = temp->data;
+			temp->data = temp->next->data;
+			temp->next->data = degis;
+			printf("####\n");
+			sayac++;	
+		}
+		else if(sayac == 1) {
+			temp = head;
+			sayac=0;
+		}
+		else {
+			temp=temp->next;
+		}
+		
+	}
+	printf("Siralandi\n");
+}
+
+int main()       //main fonksiyonun icerisinde: secimler, ekrana yazdırmalar ve fonksiyon cagirmalar yapilmistir.
+{
+	int secim ,sayi;
+	while (secim != -1) {
+		printf("\nLutfen bir secim yapiniz\n");
+		printf("1-Ekleme\n");
+		printf("2-Listele\n");
+		scanf("%d",&secim);
+	
+		switch(secim) {
+			case 1:
+				veriekle();
+				printf("Eklendi\n");
+				break;
+					
+			case 2:
+				
+				printf("Listeleme\n");
+				sirala();
+				listele();
+				break;		
+		}
+	}
+		return 0;
+}
